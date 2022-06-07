@@ -1,0 +1,1 @@
+> Library for breaking down your code into lifecycle-aware business logic components (aka BLoC), with routing functionality and pluggable UI
