@@ -1,6 +1,6 @@
 #### Bottom Nav Bloc
 
-```kotlin [1|3-7|9-11|13-23|25|27-31]
+```kotlin [1|3-7|9-11|13|14-18|19-21|25|27|29|31]
 interface BottomNavBloc {
 
     sealed class Child {

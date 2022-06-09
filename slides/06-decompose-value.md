@@ -1,6 +1,6 @@
 #### Value
 
-```kotlin []
+```kotlin [|3|5-7]
 abstract class Value<out T : Any> {
 
     abstract val value: T

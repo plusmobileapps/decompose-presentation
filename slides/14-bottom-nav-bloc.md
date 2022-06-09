@@ -1,11 +1,14 @@
 #### Bottom Nav Bloc Impl
 
-```kotlin [1|2-7|8|10-13|14-25|27-29|31-33|35-40|90-99|42-43|45-46|47-56|58-65|67-75|77-79|80-88]
+```kotlin [1-2|4|5-7|8-10|11|13-19|21-23|25-27|82-91|29-37|39|40|41|42-44|47|50-57|59-60|61-65|69-80|74-75]
+typealias CharactersBlocBuilder = 
+    (ComponentContext, Consumer<CharactersBloc.Output>) -> CharactersBloc
+
 class BottomNavBlocImpl(
     componentContext: ComponentContext,
     storeFactory: StoreFactory,
     dispatchers: Dispatchers,
-    private val charactersBloc: (ComponentContext, Consumer<CharactersBloc.Output>) -> CharactersBloc,
+    private val charactersBloc: CharactersBlocBuilder,
     private val episodesBloc: (ComponentContext) -> EpisodesBloc,
     private val bottomNavOutput: Consumer<BottomNavBloc.Output>
 ) : BottomNavBloc, ComponentContext by componentContext {
@@ -15,16 +18,7 @@ class BottomNavBlocImpl(
         di: DI,
         output: Consumer<BottomNavBloc.Output>
     ) : this(
-        componentContext = componentContext,
-        storeFactory = di.storeFactory,
-        dispatchers = di.dispatchers,
-        charactersBloc = { context, characterOutput ->
-            CharactersBlocImpl(/*..*/)
-        },
-        episodesBloc = { context, episodesOutput ->
-            EpisodesBlocImpl(/*..*/)
-        },
-        bottomNavOutput = output
+        /* inject dependencies */
     )
 
     private val store: BottomNavigationStore = instanceKeeper.getStore {
@@ -45,18 +39,16 @@ class BottomNavBlocImpl(
     override val routerState: Value<RouterState<*, BottomNavBloc.Child>> = 
         router.state
 
-    private val routerSubscriber: 
-        (RouterState<Configuration, BottomNavBloc.Child>) -> Unit = {
-            store.accept(
-                BottomNavigationStore.Intent.SelectNavItem(
-                    when (it.activeChild.instance) {
-                        is Child.Characters -> NavItem.Type.CHARACTERS
-                        is Child.Episodes -> NavItem.Type.EPISODES
-                        is Child.About -> NavItem.Type.ABOUT
-                    }
-                )
-            )
-        }
+    private val routerSubscriber: (RouterState<Configuration, Child>) -> Unit = {
+        val intent = BottomNavigationStore.Intent.SelectNavItem(
+            when (it.activeChild.instance) {
+                is Child.Characters -> NavItem.Type.CHARACTERS
+                is Child.Episodes -> NavItem.Type.EPISODES
+                is Child.About -> NavItem.Type.ABOUT
+            }
+        )
+        store.accept(intent)
+    }
 
     init {
         lifecycle.doOnResume {

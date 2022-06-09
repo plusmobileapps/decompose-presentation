@@ -2,5 +2,6 @@
 
 * Basic understanding of Jetpack Compose
 * Background with unidirectional architecture
+* Interested in compose navigation
 
-![](../images/unit-test-things.jpeg)
+![](../images/we-want-you.jpeg)

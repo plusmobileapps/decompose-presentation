@@ -1,6 +1,6 @@
 #### Bottom Nav Store Provider
 
-```kotlin [1-4|5-7|9-16|18-19|21-26|28-33|36-41]
+```kotlin [1-4|5-7|9|10|11-16|18-19|20-24|25|27-32|29-31|34-39|35-37|38|42|43|44-46]
 class BottomNavStoreProvider(
     private val storeFactory: StoreFactory, 
     private val dispatchers: Dispatchers
@@ -18,8 +18,14 @@ class BottomNavStoreProvider(
                 reducer = ReducerImpl
             ) {}
 
-    private inner class ExecutorImpl :
-        CoroutineExecutor<Intent, Nothing, State, Result, Nothing>(dispatchers.main) {
+    private inner class ExecutorImpl : 
+        CoroutineExecutor<
+            Intent,
+            Nothing, // start up action 
+            State, 
+            Result, 
+            Nothing // label
+        >(dispatchers.main) {
 
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
